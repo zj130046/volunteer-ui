@@ -1,0 +1,257 @@
+@font-face {
+    font-family: 'iconfont';
+    /* Project id 2326140 */
+    src: url('//at.alicdn.com/t/font_2326140_v2bfagh9ui.woff2?t=1637755566107') format('woff2'), url('//at.alicdn.com/t/font_2326140_v2bfagh9ui.woff?t=1637755566107') format('woff'), url('//at.alicdn.com/t/font_2326140_v2bfagh9ui.ttf?t=1637755566107') format('truetype');
+}
+
+.iconfont {
+    font-family: 'iconfont' !important;
+    font-style: normal;
+}
+
+.vo-yitongguo::before {
+    content: '\e600';
+}
+
+
+/* 搜索 */
+
+.vo-sousuo::before {
+    content: '\e634';
+    font-size: 17px;
+}
+
+
+/* 驳回 */
+
+.vo-cuowu1::before {
+    content: '\e64b';
+    font-size: 22px;
+    color: rgb(216, 30, 6);
+    margin-left: 5px;
+}
+
+
+/* 删除 */
+
+.vo-shanchu::before {
+    content: '\e614';
+    color: rgb(216, 30, 6);
+    font-size: 22px;
+    margin-left: 5px;
+}
+
+
+/* 工时表信息 */
+
+.vo-xinxi::before {
+    content: '\e6f5';
+    font-size: 27px;
+    margin-right: 5px;
+    color: rgb(212, 35, 122);
+}
+
+
+/* 认证 */
+
+.vo-chenggong::before {
+    content: '\e606';
+    font-size: 22px;
+    color: rgb(59, 169, 246);
+    margin-right: 5px;
+}
+
+
+/* 生成公示表 */
+
+.vo-shengchenggongdan::before {
+    content: '\e626';
+    font-size: 22px;
+    color: rgb(59, 169, 246);
+    margin-left: 5px;
+}
+
+
+/* 上传 */
+
+.vo-shangchuan1::before {
+    content: '\e62f';
+    font-size: 22px;
+    color: rgb(59, 169, 246);
+    margin-left: 5px;
+}
+
+
+/* 查看工时表 */
+
+.vo-biao::before {
+    content: '\e608';
+    font-size: 25px;
+    font-weight: 600;
+    color: rgb(59, 169, 246);
+    margin-left: 5px;
+}
+
+
+/* 修改 */
+
+.vo-xiugai::before {
+    content: '\e607';
+    font-size: 20px;
+    margin-left: 5px;
+}
+
+
+/* 待认证 */
+
+.vo-daibandengdaishenhe::before {
+    content: '\e67e';
+    font-size: 25px;
+}
+
+
+/* 已通过 */
+
+.vo-yishenhe::before {
+    content: '\e649';
+    font-size: 22px;
+}
+
+
+/* 已驳回 */
+
+.vo-bohui::before {
+    content: '\e642';
+    font-size: 17px;
+}
+
+
+/* 驳回原因 */
+
+.vo-bohuiyuanyinguanli::before {
+    content: '\e62a';
+    font-size: 28px;
+    margin-right: 5px;
+}
+
+
+/* 首页图标 */
+
+.vo-1::before {
+    content: '\e611';
+    font-size: 20px;
+}
+
+
+/* 人员信息图标 */
+
+.vo-qunzu::before {
+    content: '\e603';
+    font-size: 20px;
+}
+
+
+/* 人员图标 */
+
+.vo-icon-::before {
+    content: '\e672';
+    font-size: 20px;
+}
+
+
+/* 管理员图标 */
+
+.vo-guanliyuan::before {
+    content: '\e6fb';
+    font-size: 20px;
+}
+
+
+/* 组织图标 */
+
+.vo-zuzhi::before {
+    content: '\e616';
+    font-size: 20px;
+}
+
+
+/* 志愿活动图标 */
+
+.vo-zhiyuanmonitianbao::before {
+    content: '\e610';
+    font-size: 20px;
+}
+
+
+/* c审核图标 */
+
+.vo-shenhe12::before {
+    content: '\e696';
+    font-size: 20px;
+}
+
+
+/* c申请图标 */
+
+.vo-shenqing2::before {
+    content: '\e691';
+    font-size: 20px;
+}
+
+
+/* 认证图标 */
+
+.vo-shenhe_gaizhang::before {
+    content: '\e688';
+    font-size: 20px;
+}
+
+
+/* 审核图标 */
+
+.vo-V::before {
+    content: '\e710';
+    font-size: 20px;
+}
+
+
+/* 公告图标 */
+
+.vo-gonggao::before {
+    content: '\e731';
+    font-size: 20px;
+}
+
+
+/* 日志图标 */
+
+.vo-rizhi::before {
+    content: '\e60d';
+    font-size: 20px;
+}
+
+
+/* 信用分级图片 */
+
+.vo-xinyong::before {
+    content: '\e602';
+    font-size: 20px;
+}
+
+
+/* 新增志愿者招募图标 */
+
+.vo-recruitment::before {
+    content: '\e605';
+    font-size: 20px;
+}
+
+
+/* 导出文档图标 */
+
+.vo-daochuwendang::before {
+    content: '\e60e';
+    font-size: 20px;
+    margin-right: 10px;
+    color: rgb(0, 128, 192);
+}
