@@ -27,7 +27,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        
+
         <!-- 筛选框结构 -->
         <v-toolbar flat>
             <!-- <v-toolbar-title>User Profile</v-toolbar-title>
@@ -43,12 +43,12 @@
                 label="通过关键信息筛选本页"
                 single-line
                 hide-details
+                @input="log"
                 @keyup.enter="log"
             ></v-text-field>
         </v-toolbar>
         <v-tabs vertical>
-
-             <!-- 待审核，已通过，已驳回，左上角内容 -->
+            <!-- 待审核，已通过，已驳回，左上角内容 -->
             <v-tab
                 v-for="(statu, index) in statusList"
                 :key="index"
@@ -78,10 +78,8 @@
                             :search="searchInput"
                             :page.sync="this.filterForm.currPage"
                         >
-
-                           <!--Action-->
+                            <!--Action-->
                             <template v-slot:item.actions="{ item }">
-
                                 <!--工时信息按钮-->
                                 <v-tooltip bottom>
                                     <template v-slot:activator="{ on, attrs }">
@@ -358,7 +356,6 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-
     </v-card>
 </template>
 <script>
@@ -382,7 +379,9 @@ export default {
                 { text: '创建者', value: 'crater', sortable: false },
                 { text: '届别', value: 'level', sortable: false },
                 {
-                    text: '服务队', value: 'team', sortable: false 
+                    text: '服务队',
+                    value: 'organizationName',
+                    sortable: false
                 },
                 {
                     text: '工时表状态',
@@ -396,7 +395,8 @@ export default {
             reject: [],
             filterForm: {
                 currPage: 1,
-                status: 3
+                status: 3,
+                activityId: null
             },
             statusList: [
                 {
@@ -420,7 +420,7 @@ export default {
             //删除的工时表ID
             deleteId: 0,
             //确认的工时表ID
-            confirmId: -1 
+            confirmId: -1
         };
     },
     created() {
@@ -431,6 +431,15 @@ export default {
         //测试搜索
         log() {
             console.log(this.searchInput);
+            this.filterForm.activityId = this.searchInput;
+            allKindsTable(this.filterForm).then(res => {
+                this.desserts = res.data.list;
+                this.totalPage = res.data.totalPage;
+                this.filterForm.currPage = 1;
+                console.log('111');
+                console.log(this.desserts);
+                console.log(this.totalPage);
+            });
         },
         statuChange(status) {
             this.filterForm.currPage = 1;
@@ -438,8 +447,9 @@ export default {
             console.log(status);
             this.initialize();
         },
+
         initialize() {
-            allKindsTable(this.filterForm).then((res) => {
+            allKindsTable(this.filterForm).then(res => {
                 this.desserts = res.data.list;
                 this.totalPage = res.data.totalPage;
                 console.log('111');
@@ -449,7 +459,7 @@ export default {
         timeTable(id) {
             this.$router.push({ name: 'volunteerInfo', params: { id: id } });
         },
-        
+        //驳回
         async rejectTimetable() {
             if (this.input == '') {
                 this.$notify.error({
@@ -461,14 +471,14 @@ export default {
                 volunteerCheckId: this.volunteerCheckId,
                 rejectReason: this.input
             })
-                .then((res) => {
+                .then(res => {
                     this.$notify({
                         title: '已驳回',
                         message: res.msg,
                         type: 'success'
                     });
                 })
-                .catch((err) => {
+                .catch(err => {
                     this.$notify.error({
                         title: '驳回失败',
                         message: err.msg
@@ -488,18 +498,20 @@ export default {
             this.deleteId = item.volunteerCheckId;
             this.showDeleteDialog = true;
         },
-        async adminConfirmTimetable(item){
+        //认证
+        async adminConfirmTimetable() {
             this.showConfirmDialog = false;
             console.log(this.confirmId);
-            await passTimetable({ volunteerCheckId: item.volunteerCheckId })
-                .then((res) => {
+            console.log('sad');
+            await passTimetable({ volunteerCheckId: this.confirmId })
+                .then(res => {
                     this.$notify({
                         title: '已认证',
                         message: res.msg,
                         type: 'success'
                     });
                 })
-                .catch((err) => {
+                .catch(err => {
                     this.$notify.error({
                         title: '认证失败',
                         message: err.msg
@@ -513,7 +525,7 @@ export default {
             this.showDeleteDialog = false;
             let data = new FormData();
             data.append('volunteerCheckId', this.deleteId);
-            await adminDeleteTimetable(data).then((res) => {
+            await adminDeleteTimetable(data).then(res => {
                 if (res.code == 0) {
                     this.$notify.success({
                         title: '删除成功'

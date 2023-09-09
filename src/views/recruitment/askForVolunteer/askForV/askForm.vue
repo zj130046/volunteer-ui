@@ -7,25 +7,25 @@
                 <v-col class="d-flex" sm="12">
                     <v-spacer></v-spacer>
                 </v-col>
-                <v-col cols="12">
-                    <v-text-field
+                <v-col class="d-flex" cols="12">
+                    <el-date-picker
                         v-model="RecruitmentAPI.recruitStart"
-                        :rules="[rules.required, rules.dateRules]"
-                        placeholder="例日期:2021-08-15"
-                        label="招募开始时间"
-                    ></v-text-field>
+                        type="date"
+                        placeholder="招募开始时间"
+                        format="yyyy - MM - dd"
+                        value-format="yyyy-MM-dd"
+                    >
+                    </el-date-picker>
                 </v-col>
                 <v-col class="d-flex" cols="12">
-                    <v-text-field
+                    <el-date-picker
                         v-model="RecruitmentAPI.recruitEnd"
-                        :rules="[
-                            rules.required,
-                            rules.dateNum,
-                            rules.dateRules
-                        ]"
-                        placeholder="例日期:2021-08-15"
-                        label="招募结束时间"
-                    ></v-text-field>
+                        type="date"
+                        placeholder="招募结束时间"
+                        format="yyyy - MM - dd"
+                        value-format="yyyy-MM-dd"
+                    >
+                    </el-date-picker>
                 </v-col>
                 <v-col class="d-flex" cols="12">
                     <v-text-field
@@ -53,6 +53,12 @@
                         v-model="RecruitmentAPI.activityPlace"
                         :rules="[rules.required]"
                         label="活动地点"
+                    ></v-text-field>
+                </v-col>
+                <v-col class="d-flex" cols="12">
+                    <v-text-field
+                        v-model="RecruitmentAPI.workingHours"
+                        label="工时数量"
                     ></v-text-field>
                 </v-col>
                 <v-col class="d-flex" cols="12">
@@ -117,7 +123,6 @@ export default {
         checkDateNum(start, end) {
             return start <= end;
         },
-
         //   确认申请活动
         getsteps() {
             // 跳转时取到activityId
@@ -140,6 +145,7 @@ export default {
             formData.append('activityPlace', this.RecruitmentAPI.activityPlace);
             formData.append('note', this.RecruitmentAPI.note);
             formData.append('peopleCount', this.RecruitmentAPI.peopleCount);
+            formData.append('activityTime', this.RecruitmentAPI.workingHours);
 
             // 用activityId去请求基本信息
             uploadPassActivityForm(formData)
