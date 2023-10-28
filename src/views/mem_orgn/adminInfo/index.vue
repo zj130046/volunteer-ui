@@ -1,185 +1,241 @@
 <template>
-  <div>
-    <v-data-table
-      :headers="headers"
-      :items="desserts"
-      sort-by="calories"
-      class="elevation-1 body"
-      disable-pagination
-      hide-default-footer
-    >
-      <template v-slot:top>
-        <v-toolbar flat>
-          <v-toolbar-title @click="initialize">Admin-Info</v-toolbar-title>
-          <v-divider class="mx-4" inset vertical></v-divider>
-          <v-col cols="2" style="padding-top: 35px">
-            <v-text-field
-              v-model="searchInput"
-              label="输入姓名或学号"
-              append-icon="iconfont vo-sousuo"
-              @keydown.enter="search"
-              @click:append="search"
-            ></v-text-field>
-          </v-col>
-          <v-spacer> </v-spacer>
-          <v-dialog v-model="dialog" persistent max-width="500px">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-                添加管理员
-              </v-btn>
-            </template>
-            <!-- 添加和修改管理员信息的表单 -->
-            <v-card>
-              <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
-              </v-card-title>
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col cols="12">
-                      <v-text-field
-                        v-model="editedItem.studentNum"
-                        label="学号"
-                        @change="queryAdmin"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" v-if="searchAdminList.studentNum != null">
-                      <v-text-field
-                        v-model="searchAdminList.studentName"
-                        label="姓名"
-                        disabled
-                      ></v-text-field>
-                    </v-col>
-                    <v-col class="d-flex" cols="12">
-                      <v-select
-                        v-model="editedItem.rollId"
-                        :items="roleList"
-                        label="授予权限"
-                        item-text="rollName"
-                        item-value="rollId"
-                        @change="getAllOrganization"
-                        dense
-                      ></v-select>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      v-if="
-                        (editedItem.rollId == 2 ||
-                          editedItem.rollId == 3 ||
-                          editedItem.rollId == 7 ||
-                          editedItem.rollId == 8) &&
-                        localrollId != 8
-                      "
+    <div>
+        <v-data-table
+            :headers="headers"
+            :items="desserts"
+            sort-by="calories"
+            class="elevation-1 body"
+            disable-pagination
+            hide-default-footer
+        >
+            <template v-slot:top>
+                <v-toolbar flat>
+                    <v-toolbar-title @click="initialize"
+                        >Admin-Info</v-toolbar-title
                     >
-                      <v-select
-                        v-if="editedItem.rollId != 7 && editedItem.rollId != 8"
-                        v-model="editedItem.mangeRange"
-                        :items="organization"
-                        label="权限范围"
-                        item-text="organizationName"
-                        item-value="organizationId"
-                        multiple
-                      >
-                        <template v-slot:selection="{ item, index }">
-                          <v-chip v-if="index === 0">
-                            <span>{{ item.organizationName }}</span>
-                          </v-chip>
-                          <v-chip v-if="index === 1">
-                            <span>{{ item.organizationName }}</span>
-                          </v-chip>
-                          <span v-if="index === 2" class="grey--text caption">
-                            +{{ editedItem.mangeRange.length - 2 }}
-                            others
-                          </span>
-                        </template>
-                      </v-select>
-                      <v-select
-                        v-if="editedItem.rollId == 7 || editedItem.rollId == 8"
-                        v-model="editedItem.mangeRange[0]"
-                        :items="organization"
-                        label="权限范围"
-                        item-text="organizationName"
-                        item-value="organizationId"
-                      ></v-select>
+                    <v-divider class="mx-4" inset vertical></v-divider>
+                    <v-col cols="2" style="padding-top: 35px">
+                        <v-text-field
+                            v-model="searchInput"
+                            label="输入姓名或学号"
+                            append-icon="iconfont vo-sousuo"
+                            @keydown.enter="search"
+                            @click:append="search"
+                        ></v-text-field>
                     </v-col>
-                    <!-- <v-col cols="12">
+                    <v-spacer> </v-spacer>
+                    <v-dialog v-model="dialog" persistent max-width="500px">
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                                color="primary"
+                                dark
+                                class="mb-2"
+                                v-bind="attrs"
+                                v-on="on"
+                            >
+                                添加管理员
+                            </v-btn>
+                        </template>
+                        <!-- 添加和修改管理员信息的表单 -->
+                        <v-card>
+                            <v-card-title>
+                                <span class="headline">{{ formTitle }}</span>
+                            </v-card-title>
+                            <v-card-text>
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-text-field
+                                                v-model="editedItem.studentNum"
+                                                label="学号"
+                                                @change="queryAdmin"
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col
+                                            cols="12"
+                                            v-if="
+                                                searchAdminList.studentNum !=
+                                                    null
+                                            "
+                                        >
+                                            <v-text-field
+                                                v-model="
+                                                    searchAdminList.studentName
+                                                "
+                                                label="姓名"
+                                                disabled
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col class="d-flex" cols="12">
+                                            <v-select
+                                                v-model="editedItem.rollId"
+                                                :items="roleList"
+                                                label="授予权限"
+                                                item-text="rollName"
+                                                item-value="rollId"
+                                                @change="getAllOrganization"
+                                                dense
+                                            ></v-select>
+                                        </v-col>
+                                        <v-col
+                                            cols="12"
+                                            v-if="
+                                                (editedItem.rollId == 2 ||
+                                                    editedItem.rollId == 3 ||
+                                                    editedItem.rollId == 7 ||
+                                                    editedItem.rollId == 8) &&
+                                                    localrollId != 8
+                                            "
+                                        >
+                                            <v-select
+                                                v-if="
+                                                    editedItem.rollId != 7 &&
+                                                        editedItem.rollId != 8
+                                                "
+                                                v-model="editedItem.mangeRange"
+                                                :items="organization"
+                                                label="权限范围"
+                                                item-text="organizationName"
+                                                item-value="organizationId"
+                                                multiple
+                                            >
+                                                <template
+                                                    v-slot:selection="{
+                                                        item,
+                                                        index
+                                                    }"
+                                                >
+                                                    <v-chip v-if="index === 0">
+                                                        <span>{{
+                                                            item.organizationName
+                                                        }}</span>
+                                                    </v-chip>
+                                                    <v-chip v-if="index === 1">
+                                                        <span>{{
+                                                            item.organizationName
+                                                        }}</span>
+                                                    </v-chip>
+                                                    <span
+                                                        v-if="index === 2"
+                                                        class="grey--text caption"
+                                                    >
+                                                        +{{
+                                                            editedItem
+                                                                .mangeRange
+                                                                .length - 2
+                                                        }}
+                                                        others
+                                                    </span>
+                                                </template>
+                                            </v-select>
+                                            <v-select
+                                                v-if="
+                                                    editedItem.rollId == 7 ||
+                                                        editedItem.rollId == 8
+                                                "
+                                                v-model="
+                                                    editedItem.mangeRange[0]
+                                                "
+                                                :items="organization"
+                                                label="权限范围"
+                                                item-text="organizationName"
+                                                item-value="organizationId"
+                                            ></v-select>
+                                        </v-col>
+                                        <!-- <v-col cols="12">
                         <v-text-field
                             v-model="editedItem.password"
                             label="密码"
                         ></v-text-field>
                     </v-col> -->
-                  </v-row>
-                </v-container>
-              </v-card-text>
+                                    </v-row>
+                                </v-container>
+                            </v-card-text>
 
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="close"> 取消 </v-btn>
-                <v-btn color="blue darken-1" text @click="save"> 添加 </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-          <v-dialog v-model="dialogDelete" max-width="500px">
-            <!-- 确认删除的提示框 -->
-            <v-card>
-              <v-card-title class="headline">此操作将删除该管理员</v-card-title>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="closeDelete"
-                  >取消</v-btn
-                >
-                <v-btn color="blue darken-1" text @click="deleteItemConfirm"
-                  >删除</v-btn
-                >
-                <v-spacer></v-spacer>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-toolbar>
-      </template>
-      <template v-slot:item.actions="{ item }">
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-icon
-              small
-              class="mr-2"
-              @click="editItem(item)"
-              v-show="isDelate(item.rollId)"
-              v-bind="attrs"
-              v-on="on"
-            >
-              mdi-pencil
-            </v-icon>
-          </template>
-          <span>修改</span>
-        </v-tooltip>
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-icon
-              small
-              class="mr-2"
-              @click="deleteItem(item)"
-              v-show="isDelate(item.rollId)"
-              v-bind="attrs"
-              v-on="on"
-            >
-              mdi-delete
-            </v-icon>
-          </template>
-          <span>删除</span>
-        </v-tooltip>
-      </template>
-    </v-data-table>
-    <div class="text-center">
-      <v-pagination
-        v-model="page"
-        :length="totalPage"
-        :total-visible="7"
-        circle
-        @input="initialize"
-      ></v-pagination>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                    color="blue darken-1"
+                                    text
+                                    @click="close"
+                                >
+                                    取消
+                                </v-btn>
+                                <v-btn color="blue darken-1" text @click="save">
+                                    添加
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                    <v-dialog v-model="dialogDelete" max-width="500px">
+                        <!-- 确认删除的提示框 -->
+                        <v-card>
+                            <v-card-title class="headline"
+                                >此操作将删除该管理员</v-card-title
+                            >
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                    color="blue darken-1"
+                                    text
+                                    @click="closeDelete"
+                                    >取消</v-btn
+                                >
+                                <v-btn
+                                    color="blue darken-1"
+                                    text
+                                    @click="deleteItemConfirm"
+                                    >删除</v-btn
+                                >
+                                <v-spacer></v-spacer>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-toolbar>
+            </template>
+            <template v-slot:item.actions="{ item }">
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-icon
+                            small
+                            class="mr-2"
+                            @click="editItem(item)"
+                            v-show="isDelate(item.rollId)"
+                            v-bind="attrs"
+                            v-on="on"
+                        >
+                            mdi-pencil
+                        </v-icon>
+                    </template>
+                    <span>修改</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-icon
+                            small
+                            class="mr-2"
+                            @click="deleteItem(item)"
+                            v-show="isDelate(item.rollId)"
+                            v-bind="attrs"
+                            v-on="on"
+                        >
+                            mdi-delete
+                        </v-icon>
+                    </template>
+                    <span>删除</span>
+                </v-tooltip>
+            </template>
+        </v-data-table>
+        <div class="text-center">
+            <v-pagination
+                v-model="page"
+                :length="totalPage"
+                :total-visible="7"
+                circle
+                @input="initialize"
+            ></v-pagination>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -195,11 +251,11 @@ import {
     deleteAdminInCollege,
     addAdminInOrganization,
     deleteAdminInOrganization,
-    editAdminInfo,
+    editAdminInfo
 } from '../../../api/admin/personInfo/adminInfo.js';
 export default {
     data: () => ({
-    // 添加管理员时按学号搜索到的列表
+        // 添加管理员时按学号搜索到的列表
         searchAdminList: [],
         localrollId: localStorage.getItem('rollId'),
         page: 1,
@@ -211,39 +267,39 @@ export default {
                 text: '姓名',
                 align: 'start',
                 sortable: false,
-                value: 'adminName',
+                value: 'adminName'
             },
             { text: '学号', value: 'studentNum', sortable: false },
             { text: '权限', value: 'rollName', sortable: false },
             { text: '所属组织', value: 'organizationName', sortable: false },
             { text: '创建人', value: 'craterName', sortable: false },
-            { text: '操作', value: 'actions', sortable: false },
+            { text: '操作', value: 'actions', sortable: false }
         ],
         desserts: [],
         editedIndex: -1,
         editedItem: {
             studentNum: '',
             rollId: '',
-            mangeRange: [],
+            mangeRange: []
         },
         defaultItem: {
             studentNum: '',
             rollId: '',
-            mangeRange: [],
+            mangeRange: []
         },
         // 写死的权限列表
         roleList: [
             {
                 rollId: 2,
-                rollName: '总队认证负责人',
+                rollName: '总队认证负责人'
             },
             {
                 rollId: 3,
-                rollName: '总队审核负责人',
+                rollName: '总队审核负责人'
             },
             {
                 rollId: 4,
-                rollName: '院队总负责人',
+                rollName: '院队总负责人'
             },
             // {
             //   rollId: 5,
@@ -251,27 +307,27 @@ export default {
             // },
             {
                 rollId: 6,
-                rollName: '院队审核负责人',
+                rollName: '院队审核负责人'
             },
             {
                 rollId: 7,
-                rollName: '组织管理员',
+                rollName: '组织管理员'
             },
             {
                 rollId: 8,
-                rollName: '组织总负责人',
-            },
+                rollName: '组织总负责人'
+            }
         ],
         // 组织列表
         organization: [],
         searchInput: '',
-        searchList: [],
+        searchList: []
     }),
 
     computed: {
         formTitle() {
             return this.editedIndex === -1 ? '添加' : '编辑';
-        },
+        }
     },
 
     watch: {
@@ -280,11 +336,13 @@ export default {
         },
         dialogDelete(val) {
             val || this.closeDelete();
-        },
+        }
     },
 
     created() {
+        debugger;
         this.initialize();
+        debugger;
         this.get();
     },
 
@@ -306,8 +364,14 @@ export default {
         handleMangeRange() {
             if (this.editedItem.rollId == 2 || this.editedItem.rollId == 3) {
                 this.editedItem.mangeRange = [];
-                for (var i = 0; i < this.editedItem.mangeRangeName.length; i++) {
-                    this.editedItem.mangeRange.push(this.editedItem.mangeRangeName[i][1]);
+                for (
+                    var i = 0;
+                    i < this.editedItem.mangeRangeName.length;
+                    i++
+                ) {
+                    this.editedItem.mangeRange.push(
+                        this.editedItem.mangeRangeName[i][1]
+                    );
                 }
             } else {
                 this.editedItem.mangeRange = [];
@@ -317,12 +381,12 @@ export default {
         // 添加页面中的查找
         queryAdmin() {
             searchmemberInfo({ studentNum: this.editedItem.studentNum }).then(
-                (res) => {
+                res => {
                     if (res.data.list[0]) {
                         this.searchAdminList = res.data.list[0];
                     } else {
                         this.$notify.error({
-                            message: '未查询到此志愿者',
+                            message: '未查询到此志愿者'
                         });
                     }
                 }
@@ -340,11 +404,17 @@ export default {
         },
         // 获取权限列表
         getAllOrganization() {
-            getAllOrganization().then((res) => {
+            getAllOrganization().then(res => {
                 this.organization = [];
-                if (this.editedItem.rollId == 2 || this.editedItem.rollId == 3) {
+                if (
+                    this.editedItem.rollId == 2 ||
+                    this.editedItem.rollId == 3
+                ) {
                     this.organization = res.data;
-                } else if (this.editedItem.rollId == 7 || this.editedItem.rollId == 8) {
+                } else if (
+                    this.editedItem.rollId == 7 ||
+                    this.editedItem.rollId == 8
+                ) {
                     for (var i = 0; i < res.data.length; i++) {
                         if (res.data[i].categoryId == 3) {
                             this.organization.push(res.data[i]);
@@ -358,36 +428,36 @@ export default {
             // this.desserts = []
             if (/^\d+$/.test(this.searchInput)) {
                 searchAdminNum({ studentNum: this.searchInput })
-                    .then((res) => {
+                    .then(res => {
                         if (res.data) {
                             this.desserts = [];
                             this.desserts[0] = res.data;
                         } else {
                             this.$notify.error({
-                                title: '未查询到该管理员',
+                                title: '未查询到该管理员'
                             });
                         }
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         this.$notify.error({
-                            message: err.msg,
+                            message: err.msg
                         });
                     });
             } else {
                 searchAdminName({ adminName: this.searchInput })
-                    .then((res) => {
+                    .then(res => {
                         if (res.data[0]) {
                             this.desserts = [];
                             this.desserts = res.data;
                         } else {
                             this.$notify.error({
-                                title: '未查询到该管理员',
+                                title: '未查询到该管理员'
                             });
                         }
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         this.$notify.error({
-                            message: err.msg,
+                            message: err.msg
                         });
                     });
             }
@@ -399,7 +469,7 @@ export default {
                 this.currPage = 1;
             }
             var test = { currPage: this.page };
-            searchAdminAll(test).then((res) => {
+            searchAdminAll(test).then(res => {
                 this.totalPage = res.data.totalPage;
                 this.desserts = res.data.list;
                 console.log(this.desserts);
@@ -413,7 +483,7 @@ export default {
             this.editedItem.roll = item.rollId;
             this.editedItem.adminId = item.adminId;
             this.getAllOrganization();
-            console.log('-------',this.editedItem);
+            console.log('-------', this.editedItem);
             this.dialog = true;
         },
 
@@ -426,53 +496,56 @@ export default {
 
         deleteItemConfirm() {
             var map = {
-                adminId: this.editedItem.adminId,
+                adminId: this.editedItem.adminId
             };
             if (this.editedItem.rollId == 2 || this.editedItem.rollId == 3) {
                 deleteAdminInGeneral(map)
-                    .then((res) => {
+                    .then(res => {
                         this.$notify({
                             title: '已删除',
-                            type: 'success',
+                            type: 'success'
                         });
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         this.$notify.error({
                             title: '删除失败',
-                            message: err.msg,
+                            message: err.msg
                         });
                     });
             } else if (
                 this.editedItem.rollId == 4 ||
-        this.editedItem.rollId == 5 ||
-        this.editedItem.rollId == 6
+                this.editedItem.rollId == 5 ||
+                this.editedItem.rollId == 6
             ) {
                 deleteAdminInCollege(map)
-                    .then((res) => {
+                    .then(res => {
                         this.$notify({
                             message: '已删除',
-                            type: 'success',
+                            type: 'success'
                         });
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         this.$notify.error({
                             title: '删除失败',
-                            message: err.msg,
+                            message: err.msg
                         });
                     });
-            } else if (this.editedItem.rollId == 7 || this.editedItem.rollId == 8) {
+            } else if (
+                this.editedItem.rollId == 7 ||
+                this.editedItem.rollId == 8
+            ) {
                 deleteAdminInOrganization(map)
-                    .then((res) => {
+                    .then(res => {
                         this.$notify({
                             message: '已删除',
-                            type: 'success',
+                            type: 'success'
                         });
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         console.log(err);
                         this.$notify.error({
                             title: '删除失败',
-                            message: err.msg,
+                            message: err.msg
                         });
                     });
             }
@@ -506,60 +579,63 @@ export default {
             }
             if (this.editedItem.rollId == 2 || this.editedItem.rollId == 3) {
                 addAdminInGeneral(this.editedItem)
-                    .then((res) => {
+                    .then(res => {
                         this.desserts.push(this.editedItem);
                         this.$notify({
                             title: '已添加',
                             message: res.msg,
-                            type: 'success',
+                            type: 'success'
                         });
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         this.$notify.error({
                             title: '添加失败',
-                            message: err.msg,
+                            message: err.msg
                         });
                     });
             } else if (
                 this.editedItem.rollId == 4 ||
-        this.editedItem.rollId == 5 ||
-        this.editedItem.rollId == 6
+                this.editedItem.rollId == 5 ||
+                this.editedItem.rollId == 6
             ) {
                 var map = {
                     studentNum: this.editedItem.studentNum,
-                    rollId: this.editedItem.rollId,
+                    rollId: this.editedItem.rollId
                     // password: this.editedItem.password
                 };
                 console.log(map);
                 addAdminInCollege(map)
-                    .then((res) => {
+                    .then(res => {
                         this.desserts.push(this.editedItem);
                         this.$notify({
                             title: '已添加',
                             message: res.msg,
-                            type: 'success',
+                            type: 'success'
                         });
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         this.$notify.error({
                             title: '添加失败',
-                            message: err,
+                            message: err
                         });
                     });
-            } else if (this.editedItem.rollId == 7 || this.editedItem.rollId == 8) {
+            } else if (
+                this.editedItem.rollId == 7 ||
+                this.editedItem.rollId == 8
+            ) {
                 addAdminInOrganization(this.editedItem)
-                    .then((res) => {
+                    .then(res => {
                         this.desserts.push(this.editedItem);
                         this.$notify({
                             title: '已添加',
                             message: res.msg,
-                            type: 'success',
+                            type: 'success'
                         });
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         this.$notify.error({
                             title: '添加失败',
-                            message: err.msg,
+                            message: err.msg
                         });
                     });
             }
@@ -569,31 +645,22 @@ export default {
             this.close();
         },
         edit() {
-
             let mangeRangeString = '';
-      
-            this.editedItem.mangeRange.forEach((item) => {
-                mangeRangeString += '-'+item;
+
+            this.editedItem.mangeRange.forEach(item => {
+                mangeRangeString += '-' + item;
             });
             this.editedItem.mangeRange = mangeRangeString;
-            console.log('=-=-=-=-=-',this.editedItem.mangeRange);
-            editAdminInfo(this.editedItem).then((res) => {
-        
+            console.log('=-=-=-=-=-', this.editedItem.mangeRange);
+            editAdminInfo(this.editedItem).then(res => {
                 console.log(res.data);
                 this.$notify.info({
-                    title: '修改成功',
+                    title: '修改成功'
                 });
             });
-      
+
             return;
-            
-                
-            
-            pt>
-                
-             scoped>
-            {
-        rgin: 0 0 20px 2px;
-    padding: 5px 15px 5px 15px;
-}
-</style>
+        }
+    }
+};
+</script>

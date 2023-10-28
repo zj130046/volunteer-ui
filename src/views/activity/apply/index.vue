@@ -58,29 +58,20 @@
                     <v-card-text>
                         <v-row>
                             <v-col class="d-flex" cols="12">
-                                <el-date-picker
-                                    v-model="
-                                        getActivityPlanningForm.activityStartTime
-                                    "
-                                    type="date"
-                                    placeholder="活动开始时间"
-                                    format="yyyy - MM - dd"
-                                    value-format="yyyy-MM-dd"
-                                >
-                                </el-date-picker>
+                                <div class="block">
+                                    <el-date-picker
+                                        v-model="rangeTime"
+                                        type="daterange"
+                                        range-separator="至"
+                                        start-placeholder="开始日期"
+                                        end-placeholder="结束日期"
+                                        format="yyyy - MM - dd"
+                                        value-format="yyyy-MM-dd"
+                                    >
+                                    </el-date-picker>
+                                </div>
                             </v-col>
-                            <v-col class="d-flex" cols="12">
-                                <el-date-picker
-                                    v-model="
-                                        getActivityPlanningForm.activityEndTime
-                                    "
-                                    type="date"
-                                    placeholder="活动结束时间"
-                                    format="yyyy - MM - dd"
-                                    value-format="yyyy-MM-dd"
-                                >
-                                </el-date-picker>
-                            </v-col>
+
                             <v-col cols="12">
                                 <v-text-field
                                     label="申请人"
@@ -428,6 +419,7 @@ export default {
             ],
             totalPage: 0,
             dialog: false,
+            rangeTime: ['', ''],
             getActivityPlanningForm: {
                 activityId: null,
                 activityName: null,
@@ -494,9 +486,14 @@ export default {
             this.initialize_kind();
             this.initialize();
         },
+
         // 提交的活动列表
         async initialize() {
-            await getActivityPlanningList(this.getActivityPlanningForm)
+            await getActivityPlanningList({
+                ...this.getActivityPlanningForm,
+                activityStartTime: this.rangeTime[0],
+                activityEndTime: this.rangeTime[1]
+            })
                 .then(res => {
                     this.desserts = res.data.list;
                     console.log(res.data);

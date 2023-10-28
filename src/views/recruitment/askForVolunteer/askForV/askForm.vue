@@ -7,7 +7,22 @@
                 <v-col class="d-flex" sm="12">
                     <v-spacer></v-spacer>
                 </v-col>
+
                 <v-col class="d-flex" cols="12">
+                    <div class="block">
+                        <el-date-picker
+                            v-model="rangeTime"
+                            type="daterange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            format="yyyy - MM - dd"
+                            value-format="yyyy-MM-dd"
+                        >
+                        </el-date-picker>
+                    </div>
+                </v-col>
+                <!-- <v-col class="d-flex" cols="12">
                     <el-date-picker
                         v-model="RecruitmentAPI.recruitStart"
                         type="date"
@@ -26,7 +41,8 @@
                         value-format="yyyy-MM-dd"
                     >
                     </el-date-picker>
-                </v-col>
+                </v-col> -->
+
                 <v-col class="d-flex" cols="12">
                     <v-text-field
                         v-model="RecruitmentAPI.dayTime"
@@ -109,7 +125,8 @@ export default {
             },
             // 招募活动的基本对象
             RecruitmentAPI: {},
-            dialog: true
+            dialog: true,
+            rangeTime: ['', '']
         };
     },
     created() {},
@@ -126,6 +143,7 @@ export default {
         //   确认申请活动
         getsteps() {
             // 跳转时取到activityId
+
             this.RecruitmentAPI.activityId = parseInt(
                 this.$route.query.activityId
             );
@@ -139,8 +157,8 @@ export default {
                 'organizationId',
                 this.RecruitmentAPI.organizationId
             );
-            formData.append('recruitStart', this.RecruitmentAPI.recruitStart);
-            formData.append('recruitEnd', this.RecruitmentAPI.recruitEnd);
+            formData.append('recruitStart', this.rangeTime[0]);
+            formData.append('recruitEnd', this.rangeTime[1]);
             formData.append('dayTime', this.RecruitmentAPI.dayTime);
             formData.append('activityPlace', this.RecruitmentAPI.activityPlace);
             formData.append('note', this.RecruitmentAPI.note);
