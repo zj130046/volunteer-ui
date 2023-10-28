@@ -64,7 +64,7 @@ export const constantRouterMap = [
                 meta: {
                     title: '申请活动',
                     icon: 'iconfont vo-shenqing2',
-                    keepAlive: false
+                    keepAlive: true
                 },
                 component: () =>
                     import(
@@ -118,7 +118,7 @@ export const constantRouterMap = [
         component: layout,
         meta: {
             title: '申请活动',
-            keepAlive: true
+            keepAlive: false
         },
         children: [
             {
@@ -191,7 +191,7 @@ export const constantRouterMap = [
         meta: {
             title: '工时表详情',
             icon: 'mdi-gauge',
-            keepAlive: false
+            keepAlive: true
         },
         children: [
             {
@@ -200,7 +200,7 @@ export const constantRouterMap = [
                 meta: {
                     title: '工时表详情',
                     icon: 'mdi-gauge',
-                    keepAlive: false
+                    keepAlive: true
                 },
                 component: () =>
                     import(

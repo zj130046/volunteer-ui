@@ -1,3 +1,4 @@
+<!-- 活动工时认证 -->
 <template>
     <v-card>
         <v-dialog v-model="dialog" persistent max-width="450px">
@@ -29,15 +30,15 @@
         </v-dialog>
 
         <!-- 筛选框结构 -->
-        <v-toolbar flat>
+        <v-toolbar flat class="toolbar">
             <!-- <v-toolbar-title>User Profile</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider> -->
             <!-- 21暑假工时系统完善 需求4 -->
             <v-toolbar-title>authentication</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer> </v-spacer>
-            <!-- 筛选栏 -->
-            <v-text-field
+
+            <!-- <v-text-field
                 v-model="searchInput"
                 append-icon="mdi-magnify"
                 label="通过关键信息筛选本页"
@@ -45,8 +46,93 @@
                 hide-details
                 @input="log"
                 @keyup.enter="log"
-            ></v-text-field>
+            ></v-text-field> -->
+            <v-col cols="3" style="padding-top: 35px">
+                <v-text-field
+                    label="活动ID"
+                    hide-details="auto"
+                    v-model="filterForm.activityId"
+                    @change="log()"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="3" style="padding-top: 35px">
+                <v-text-field
+                    label="工时表ID"
+                    hide-details="auto"
+                    v-model="filterForm.volunteerCheckId"
+                    @change="log()"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="3" style="padding-top: 35px">
+                <v-text-field
+                    label="活动名"
+                    hide-details="auto"
+                    v-model="filterForm.activityName"
+                    @change="log()"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="1">
+                <v-btn
+                    class="mr-3"
+                    elevation="2"
+                    color="primary"
+                    @click="showFilterDialog = true"
+                    >筛选</v-btn
+                >
+            </v-col>
         </v-toolbar>
+        <!-- 筛选dialog -->
+        <v-dialog v-model="showFilterDialog" persistent max-width="500px">
+            <v-card>
+                <v-card-text>
+                    <v-row>
+                        <v-col class="d-flex" cols="12">
+                            <el-date-picker
+                                v-model="filterForm.activityDate"
+                                type="date"
+                                placeholder="活动开始时间"
+                                format="yyyy - MM - dd"
+                                value-format="yyyy-MM-dd"
+                            >
+                            </el-date-picker>
+                        </v-col>
+                        <v-col cols="12">
+                            <v-text-field
+                                label="创建者"
+                                hide-details="auto"
+                                v-model="filterForm.crater"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12">
+                            <v-text-field
+                                label="服务队"
+                                hide-details="auto"
+                                v-model="filterForm.organizationName"
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="showFilterDialog = false"
+                    >
+                        取消
+                    </v-btn>
+                    <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="(showFilterDialog = false) & log()"
+                    >
+                        确定
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
         <v-tabs vertical>
             <!-- 待审核，已通过，已驳回，左上角内容 -->
             <v-tab
@@ -119,7 +205,7 @@
                                             class="iconfont vo-cuowu1"
                                             @click="
                                                 dialog = true;
-                                                volunteerCheckId =
+                                                filterForm.volunteerCheckId =
                                                     item.volunteerCheckId;
                                             "
                                             v-bind="attrs"
@@ -375,6 +461,11 @@ export default {
             headers: [
                 { text: '活动ID', value: 'activityId', sortable: false },
                 { text: '活动名称', value: 'activityName', sortable: false },
+                {
+                    text: '工时表ID',
+                    value: 'volunteerCheckId',
+                    sortable: false
+                },
                 { text: '活动时间', value: 'activityDate', sortable: false },
                 { text: '创建者', value: 'crater', sortable: false },
                 { text: '届别', value: 'level', sortable: false },
@@ -383,6 +474,7 @@ export default {
                     value: 'organizationName',
                     sortable: false
                 },
+
                 {
                     text: '工时表状态',
                     value: 'volunteerStatusName',
@@ -394,6 +486,11 @@ export default {
             authentication: [],
             reject: [],
             filterForm: {
+                organizationName: null,
+                crater: null,
+                activityDate: null,
+                activityName: null,
+                volunteerCheckId: null,
                 currPage: 1,
                 status: 3,
                 activityId: null
@@ -410,7 +507,7 @@ export default {
             totalPage: 2,
             dialog: false,
             input: '',
-            volunteerCheckId: null,
+
             //负责人id
             rollId: '',
             //是否显示删除框
@@ -420,7 +517,8 @@ export default {
             //删除的工时表ID
             deleteId: 0,
             //确认的工时表ID
-            confirmId: -1
+            confirmId: -1,
+            showFilterDialog: false
         };
     },
     created() {
@@ -430,8 +528,9 @@ export default {
     methods: {
         //测试搜索
         log() {
-            console.log(this.searchInput);
-            this.filterForm.activityId = this.searchInput;
+            console.log('请看');
+            console.log(this.filterForm);
+
             allKindsTable(this.filterForm).then(res => {
                 this.desserts = res.data.list;
                 this.totalPage = res.data.totalPage;
@@ -545,5 +644,8 @@ export default {
 .body {
     margin: 0 0 20px 2px;
     padding: 5px 15px 5px 15px;
+}
+.d-flex {
+    margin-top: 15px;
 }
 </style>

@@ -26,6 +26,91 @@
                 ></v-select>
             </v-col>
             <v-spacer> </v-spacer>
+
+            <v-col cols="2" style="padding-top: 35px">
+                <v-text-field
+                    label="活动ID"
+                    hide-details="auto"
+                    v-model="getActivityPlanningForm.activityId"
+                    @change="initialize()"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="2" style="padding-top: 35px">
+                <v-text-field
+                    label="活动名"
+                    hide-details="auto"
+                    v-model="getActivityPlanningForm.activityName"
+                    @change="initialize()"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="1">
+                <v-btn
+                    class="mr-3"
+                    elevation="2"
+                    color="primary"
+                    @click="showFilterDialog = true"
+                    >筛选</v-btn
+                >
+            </v-col>
+            <!-- 搜索筛选框 -->
+            <v-dialog v-model="showFilterDialog" persistent max-width="500px">
+                <v-card>
+                    <v-card-text>
+                        <v-row>
+                            <v-col class="d-flex" cols="12">
+                                <el-date-picker
+                                    v-model="
+                                        getActivityPlanningForm.activityStartTime
+                                    "
+                                    type="date"
+                                    placeholder="活动开始时间"
+                                    format="yyyy - MM - dd"
+                                    value-format="yyyy-MM-dd"
+                                >
+                                </el-date-picker>
+                            </v-col>
+                            <v-col class="d-flex" cols="12">
+                                <el-date-picker
+                                    v-model="
+                                        getActivityPlanningForm.activityEndTime
+                                    "
+                                    type="date"
+                                    placeholder="活动结束时间"
+                                    format="yyyy - MM - dd"
+                                    value-format="yyyy-MM-dd"
+                                >
+                                </el-date-picker>
+                            </v-col>
+                            <v-col cols="12">
+                                <v-text-field
+                                    label="申请人"
+                                    hide-details="auto"
+                                    v-model="getActivityPlanningForm.crater"
+                                ></v-text-field>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="showFilterDialog = false"
+                        >
+                            取消
+                        </v-btn>
+                        <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="(showFilterDialog = false) & initialize()"
+                        >
+                            确定
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
             <v-menu rounded>
                 <template v-slot:activator="{ attrs, on }">
                     <v-btn
@@ -344,11 +429,18 @@ export default {
             totalPage: 0,
             dialog: false,
             getActivityPlanningForm: {
+                activityId: null,
+                activityName: null,
+                activityStartTime: null,
+                activityEndTime: null,
+                crater: null,
                 currPage: 1,
                 status: 3, // 活动审核状态:1-已通过  2-被驳回  3-审核中
                 category: 2
             },
-            // 活动性质
+            //活动性质筛选表的框
+            showFilterDialog: false,
+            // 活动性质搜索框
             getActivityKindPlanningForm: {
                 currPage: 1,
                 status: 1, // 活动审核状态:1-已通过  2-被驳回  3-审核中
@@ -492,5 +584,8 @@ export default {
     span {
         float: right;
     }
+}
+.d-flex {
+    margin-top: 50px;
 }
 </style>
