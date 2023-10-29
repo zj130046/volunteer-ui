@@ -200,7 +200,7 @@ export const constantRouterMap = [
                 meta: {
                     title: '工时表详情',
                     icon: 'mdi-gauge',
-                    keepAlive: true
+                    keepAlive: false
                 },
                 component: () =>
                     import(
