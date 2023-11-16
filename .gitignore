@@ -4,6 +4,7 @@ dist
 vue-material-admin
 
 /volunteer
+/volunteer-test
 
 /tests/e2e/videos/
 /tests/e2e/screenshots/
