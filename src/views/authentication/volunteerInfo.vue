@@ -203,6 +203,7 @@ export default {
                 { text: '学号', value: 'studentNum', sortable: false },
                 { text: '工时', value: 'volunteerTime', sortable: false },
                 { text: '创建时间', value: 'createTime', sortable: false },
+                { text: '确认时间', value: 'confirmTime', sortable: false },
                 { text: '认证时间', value: 'confirmTime', sortable: false },
                 { text: '活动时间', value: 'activityDate', sortable: false }
             ],
@@ -399,7 +400,10 @@ export default {
                     // 设置a标签的href（点击地址）
                     link.href = URL.createObjectURL(blob);
                     // 设置a标签属性
-                    link.setAttribute('download', '学生工时批量导入模板表.xlsx');
+                    link.setAttribute(
+                        'download',
+                        '学生工时批量导入模板表.xlsx'
+                    );
                     // 点击a标签
                     document.body.appendChild(link);
                     link.click();

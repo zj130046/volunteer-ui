@@ -22,7 +22,11 @@
                     <v-btn color="blue darken-1" text @click="dialog = false">
                         取消
                     </v-btn>
-                    <v-btn color="blue darken-1" text @click="rejectTimetable">
+                    <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="rejectTimetable()"
+                    >
                         驳回
                     </v-btn>
                 </v-card-actions>
@@ -204,13 +208,14 @@
                                             small
                                             class="iconfont vo-cuowu1"
                                             @click="
-                                                dialog = true;
-                                                filterForm.volunteerCheckId =
-                                                    item.volunteerCheckId;
+                                                reject.volunteerCheckId = item.volunteerCheckId;
+                                                    dialog = true
                                             "
                                             v-bind="attrs"
                                             v-on="on"
                                         >
+                                            <!-- // filterForm.volunteerCheckId =
+                                                //     item.volunteerCheckId; -->
                                         </v-icon>
                                     </template>
                                     <span>驳回</span>
@@ -484,7 +489,10 @@ export default {
             desserts: [],
             examined: [],
             authentication: [],
-            reject: [],
+            reject: {
+                volunteerCheckId: 0,
+                rejectReason: ''
+            },
             filterForm: {
                 organizationName: null,
                 crater: null,
@@ -567,7 +575,7 @@ export default {
                 return;
             }
             await rejectTimetable({
-                volunteerCheckId: this.volunteerCheckId,
+                volunteerCheckId: this.reject.volunteerCheckId,
                 rejectReason: this.input
             })
                 .then(res => {
