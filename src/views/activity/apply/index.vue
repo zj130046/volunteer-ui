@@ -491,8 +491,8 @@ export default {
         async initialize() {
             await getActivityPlanningList({
                 ...this.getActivityPlanningForm,
-                activityStartTime: this.rangeTime?this.rangeTime[0]:'',
-                activityEndTime: this.rangeTime?this.rangeTime[1]:''
+                activityStartTime: this.rangeTime ? this.rangeTime[0] : '',
+                activityEndTime: this.rangeTime ? this.rangeTime[1] : ''
             })
                 .then(res => {
                     this.desserts = res.data.list;
