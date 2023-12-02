@@ -369,14 +369,14 @@ export default {
         //获取工时详情
         async getAllKindsTable() {
             await getAllKindsTable(this.timetableForm)
-                .then(res => {
+                .then((res) => {
                     console.log(res.data.list);
                     if (res.code == 0) {
                         this.timetableList = res.data.list;
                         this.totalPage = res.data.totalPage;
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     this.$message.error('网络错误！');
                 });
         },
@@ -386,7 +386,7 @@ export default {
             let data = new FormData();
             data.append('volunteerCheckId', item.volunteerCheckId);
             await confirmTime(data)
-                .then(res => {
+                .then((res) => {
                     console.log(res);
                     if (res.code == 0) {
                         this.$notify.success({
@@ -401,7 +401,7 @@ export default {
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     this.$notify.error({
                         title: '网络错误！',
                         message: res.msg
@@ -420,7 +420,7 @@ export default {
         async getTimetableReason(item) {
             await getTimetableReason({
                 volunteerCheckId: item.volunteerCheckId
-            }).then(res => {
+            }).then((res) => {
                 if (res.code == 0) {
                     this.rejectReason = res.data;
                     this.showRejectReasonDialog = true;

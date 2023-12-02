@@ -428,7 +428,8 @@ export default {
                 crater: null,
                 currPage: 1,
                 status: 3, // 活动审核状态:1-已通过  2-被驳回  3-审核中
-                category: 2
+                category: 2,
+                characterCategory: 2
             },
             //活动性质筛选表的框
             showFilterDialog: false,
@@ -436,6 +437,7 @@ export default {
             getActivityKindPlanningForm: {
                 currPage: 1,
                 status: 1, // 活动审核状态:1-已通过  2-被驳回  3-审核中
+                category: 2,
                 characterCategory: 2
             },
             //查看驳回原因
@@ -489,6 +491,7 @@ export default {
 
         // 提交的活动列表
         async initialize() {
+            this.getActivityPlanningForm.characterCategory = this.getActivityKindPlanningForm.characterCategory;
             await getActivityPlanningList({
                 ...this.getActivityPlanningForm,
                 activityStartTime: this.rangeTime ? this.rangeTime[0] : '',
@@ -511,6 +514,7 @@ export default {
         },
         // 活动性质列表
         async initialize_kind() {
+            this.getActivityKindPlanningForm.category = this.getActivityPlanningForm.category;
             console.log(this.getActivityKindPlanningForm);
             await getActivityKindList(this.getActivityKindPlanningForm).then(
                 res => {
