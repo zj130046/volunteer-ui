@@ -203,8 +203,8 @@ export default {
                 { text: '学号', value: 'studentNum', sortable: false },
                 { text: '工时', value: 'volunteerTime', sortable: false },
                 { text: '创建时间', value: 'createTime', sortable: false },
-                { text: '确认时间', value: 'confirmTime', sortable: false },
-                { text: '认证时间', value: 'passTime', sortable: false },
+                // { text: '确认时间', value: 'confirmTime', sortable: false },
+                { text: '认证时间', value: 'confirmTime', sortable: false },
                 { text: '活动时间', value: 'activityDate', sortable: false }
             ],
             // 签名
