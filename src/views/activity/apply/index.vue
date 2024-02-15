@@ -22,7 +22,7 @@
                     item-text="characterName"
                     item-value="characterId"
                     dense
-                    @change="initialize_kind"
+                    @change="initialize"
                 ></v-select>
             </v-col>
             <v-spacer> </v-spacer>
@@ -435,8 +435,13 @@ export default {
             showFilterDialog: false,
             // 活动性质搜索框
             getActivityKindPlanningForm: {
+                activityId: null,
+                activityName: null,
+                activityStartTime: null,
+                activityEndTime: null,
+                crater: null,
                 currPage: 1,
-                status: 1, // 活动审核状态:1-已通过  2-被驳回  3-审核中
+                status: 3, // 活动审核状态:1-已通过  2-被驳回  3-审核中
                 category: 2,
                 characterCategory: 2
             },
