@@ -34,6 +34,7 @@
                     v-model="getActivityPlanningForm.activityId"
                     @change="initialize()"
                 ></v-text-field>
+
             </v-col>
             <v-col cols="2" style="padding-top: 35px">
                 <v-text-field
@@ -43,8 +44,21 @@
                     @change="initialize()"
                 ></v-text-field>
             </v-col>
+
+            <!-- 添加确认按钮 -->
             <v-col cols="1">
                 <v-btn
+                    class="mr-3"
+                    elevation="2"
+                    color="primary"
+                    @click="initialize()"
+                    >确定</v-btn
+                >
+            </v-col>
+
+            <v-col cols="1">
+                <v-btn
+                    style="margin-left: -24px;"
                     class="mr-3"
                     elevation="2"
                     color="primary"
@@ -52,6 +66,7 @@
                     >筛选</v-btn
                 >
             </v-col>
+
             <!-- 搜索筛选框 -->
             <v-dialog v-model="showFilterDialog" persistent max-width="500px">
                 <v-card>
@@ -502,13 +517,13 @@ export default {
                 activityStartTime: this.rangeTime ? this.rangeTime[0] : '',
                 activityEndTime: this.rangeTime ? this.rangeTime[1] : ''
             })
-                .then(res => {
+                .then((res) => {
                     this.desserts = res.data.list;
                     console.log(res.data);
                     this.totalPage = res.data.totalPage;
                     this.currpage_kind = 1;
                 })
-                .catch(err => {
+                .catch((err) => {
                     this.$message.error('网络错误！');
                 });
             console.log(this.headers);
@@ -522,7 +537,7 @@ export default {
             this.getActivityKindPlanningForm.category = this.getActivityPlanningForm.category;
             console.log(this.getActivityKindPlanningForm);
             await getActivityKindList(this.getActivityKindPlanningForm).then(
-                res => {
+                (res) => {
                     this.desserts = res.data.list;
                     console.log(res.data);
                     this.totalPage = res.data.totalPage;
@@ -565,7 +580,7 @@ export default {
         //获取驳回原因
         async getActivityReason(item) {
             await getActivityReason({ activityId: item.activityId }).then(
-                res => {
+                (res) => {
                     console.log(res);
                     if (res.code == 0) {
                         this.rejectReason = res.data;

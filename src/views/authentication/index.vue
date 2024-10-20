@@ -75,6 +75,19 @@
                     @change="log()"
                 ></v-text-field>
             </v-col>
+
+            <!--添加确定按钮-->
+            <v-col cols="1">
+                <v-btn
+                    class="mr-3"
+                    elevation="2"
+                    color="primary"
+                    @click="log()"
+                    >确认</v-btn
+                >
+            </v-col>
+
+
             <v-col cols="1">
                 <v-btn
                     class="mr-3"
