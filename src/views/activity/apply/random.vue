@@ -43,91 +43,91 @@
 </template>
 
 <script>
-import { getRandomString, getDates } from "../../../api/allVolunteer/leader";
-import { dateFormat } from "../../../utils/date";
+import { getRandomString, getDates } from '../../../api/allVolunteer/leader';
+import { dateFormat } from '../../../utils/date';
 export default {
-  data() {
-    return {
-      rules: { counter: (value) => /^\d*$/.test(value) || "仅输入数字" },
-      //工时表表单
-      timetableForm: {
-        activityId: "",
-        effectiveTime: "",
-        activityDate: "",
-        volunteerTimes: [],
-      },
-      //已经生成过工时表的日期
-      activityDateList: [],
-      //已生成工时表日期样式改变
-      pickerOptions: {
-        cellClassName: (time) => {
-          //   console.log(
-          //     this.activityDateList.includes(dateFormat("YYYY-mm-dd", time))
-          //   );
-          if (this.activityDateList.includes(dateFormat("YYYY-mm-dd", time))) {
-            return "red";
-          }
-        },
-      },
-      //工时选项
-      timeList: [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12],
-      //六位码
-      stringNum: "",
-    };
-  },
-  created() {
-    this.timetableForm.activityId = this.$route.params.id;
-    this.getDates();
-  },
-  methods: {
+    data() {
+        return {
+            rules: { counter: (value) => /^\d*$/.test(value) || '仅输入数字' },
+            //工时表表单
+            timetableForm: {
+                activityId: '',
+                effectiveTime: '',
+                activityDate: '',
+                volunteerTimes: [],
+            },
+            //已经生成过工时表的日期
+            activityDateList: [],
+            //已生成工时表日期样式改变
+            pickerOptions: {
+                cellClassName: (time) => {
+                    //   console.log(
+                    //     this.activityDateList.includes(dateFormat("YYYY-mm-dd", time))
+                    //   );
+                    if (this.activityDateList.includes(dateFormat('YYYY-mm-dd', time))) {
+                        return 'red';
+                    }
+                },
+            },
+            //工时选项
+            timeList: [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12],
+            //六位码
+            stringNum: '',
+        };
+    },
+    created() {
+        this.timetableForm.activityId = this.$route.params.id;
+        this.getDates();
+    },
+    methods: {
     //获取已经生成过工时表的日期
-    async getDates() {
-      await getDates({ activityId: this.timetableForm.activityId }).then(
-        (res) => {
-          console.log(res.data);
-          this.activityDateList = res.data;
-        }
-      );
+        async getDates() {
+            await getDates({ activityId: this.timetableForm.activityId }).then(
+                (res) => {
+                    console.log(res.data);
+                    this.activityDateList = res.data;
+                }
+            );
+        },
+        //生成工时表 获得六位认证码
+        async getString() {
+            if (this.timetableForm.volunteerTimes == []) {
+                this.$notify({
+                    title: '请选择可认证工时列表！',
+                    type: 'error',
+                });
+                return;
+            }
+            if (typeof this.timetableForm.activityDate != 'string')
+                this.timetableForm.activityDate = dateFormat(
+                    'YYYY-mm-dd',
+                    this.timetableForm.activityDate
+                );
+            console.log(this.timetableForm);
+            await getRandomString(this.timetableForm)
+                .then((res) => {
+                    console.log(res);
+                    if (res.code == 0) {
+                        this.$notify.success({
+                            title: '生成成功!',
+                            message: res.msg,
+                        });
+                        this.stringNum = res.data;
+                    } else {
+                        this.$notify.error({
+                            title: '生成失败!',
+                            message: res.msg,
+                        });
+                    }
+                })
+                .catch((err) => {
+                    this.$notify.error({
+                        title: '网络错误!',
+                        message: err,
+                    });
+                });
+        },
     },
-    //生成工时表 获得六位认证码
-    async getString() {
-      if (this.timetableForm.volunteerTimes == []) {
-        this.$notify({
-          title: "请选择可认证工时列表！",
-          type: "error",
-        });
-        return;
-      }
-      if (typeof this.timetableForm.activityDate != "string")
-        this.timetableForm.activityDate = dateFormat(
-          "YYYY-mm-dd",
-          this.timetableForm.activityDate
-        );
-      console.log(this.timetableForm);
-      await getRandomString(this.timetableForm)
-        .then((res) => {
-          console.log(res);
-          if (res.code == 0) {
-            this.$notify.success({
-              title: "生成成功!",
-              message: res.msg,
-            });
-            this.stringNum = res.data;
-          } else {
-            this.$notify.error({
-              title: "生成失败!",
-              message: res.msg,
-            });
-          }
-        })
-        .catch((err) => {
-          this.$notify.error({
-            title: "网络错误!",
-            message: err,
-          });
-        });
-    },
-  },
 };
 </script>
 

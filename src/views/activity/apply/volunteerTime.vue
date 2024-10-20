@@ -139,184 +139,186 @@
 
 <script>
 import {
-  getTimetableInfo,
-  deleteTime,
-  addTime,
-  editTime,
-} from "../../../api/allVolunteer/leader";
-import { exportDialog } from "../../../api/file";
+    getTimetableInfo,
+    deleteTime,
+    addTime,
+    editTime,
+} from '../../../api/allVolunteer/leader';
+import { exportDialog } from '../../../api/file';
 export default {
-  data() {
-    return {
-      //表头
-      headers: [
-        {
-          text: "VID",
-          sortable: false,
-          value: "volunteerCheckId",
-        },
-        { text: "姓名", value: "studentName", sortable: false },
-        { text: "学号", value: "studentNum", sortable: false },
-        { text: "工时", value: "volunteerTime", sortable: false },
-        { text: "创建时间", value: "createTime", sortable: false },
-        { text: "Actions", value: "actions", sortable: false },
-      ],
-      // 签名
-      exportDia: false,
-      exportname: "",
-      //excel
-      volunteerUrl: "",
-      // 工时表ID
-      volunteerCheckId: 0,
-      // 工时列表
-      volunteerTimeList: [],
-      // 加载
-      volunteerLoading: false,
-      // 删除表单
-      deleteForm: {
-        volunteerCheckId: "",
-        studentNum: "",
-      },
-      //添加
-      showAddDialog: false,
-      //添加表单
-      addVolunteerTime: {
-        volunteerCheckId: "",
-        studentNum: "",
-        volunteerTime: "",
-      },
-      //修改
-      showEditDialog: false,
-      //修改表单
-      editVolunteerTime: {
-        volunteerCheckId: "",
-        studentNum: "",
-        volunteerTime: "",
-      },
-    };
-  },
-  created() {
-    this.volunteerCheckId = this.$route.params.id;
-    this.getTimetableInfo();
-  },
-  methods: {
+    data() {
+        return {
+            //表头
+            headers: [
+                {
+                    text: 'VID',
+                    sortable: false,
+                    value: 'volunteerCheckId',
+                },
+                { text: '姓名', value: 'studentName', sortable: false },
+                { text: '学号', value: 'studentNum', sortable: false },
+                { text: '工时', value: 'volunteerTime', sortable: false },
+                { text: '创建时间', value: 'createTime', sortable: false },
+                { text: 'Actions', value: 'actions', sortable: false },
+            ],
+            // 签名
+            exportDia: false,
+            exportname: '',
+            //excel
+            volunteerUrl: '',
+            // 工时表ID
+            volunteerCheckId: 0,
+            // 工时列表
+            volunteerTimeList: [],
+            // 加载
+            volunteerLoading: false,
+            // 删除表单
+            deleteForm: {
+                volunteerCheckId: '',
+                studentNum: '',
+            },
+            //添加
+            showAddDialog: false,
+            //添加表单
+            addVolunteerTime: {
+                volunteerCheckId: '',
+                studentNum: '',
+                volunteerTime: '',
+            },
+            //修改
+            showEditDialog: false,
+            //修改表单
+            editVolunteerTime: {
+                volunteerCheckId: '',
+                studentNum: '',
+                volunteerTime: '',
+            },
+        };
+    },
+    created() {
+        this.volunteerCheckId = this.$route.params.id;
+        this.getTimetableInfo();
+    },
+    methods: {
     //获取工时详情
-    async getTimetableInfo() {
-      this.volunteerLoading = true;
-      await getTimetableInfo({ volunteerCheckId: this.volunteerCheckId }).then(
-        (res) => {
-          if (res.code == 0) {
-            console.log(res.data);
-            this.volunteerTimeList = res.data;
-            this.volunteerLoading = false;
-          }
-        }
-      );
-    },
-    //删除
-    async deleteTime(item) {
-      let data = new FormData();
-      data.append("volunteerCheckId", this.volunteerCheckId);
-      data.append("studentNum", item.studentNum);
-      await deleteTime(data)
-        .then((res) => {
-          if (res.code == 0) {
-            this.$notify({
-              title: "删除成功",
-              message: res.msg,
-              type: "success",
+        async getTimetableInfo() {
+            this.volunteerLoading = true;
+            await getTimetableInfo({ volunteerCheckId: this.volunteerCheckId }).then(
+                (res) => {
+                    if (res.code == 0) {
+                        console.log(res.data);
+                        this.volunteerTimeList = res.data;
+                        this.volunteerLoading = false;
+                    }
+                }
+            );
+        },
+        //删除
+        async deleteTime(item) {
+            let data = new FormData();
+            data.append('volunteerCheckId', this.volunteerCheckId);
+            data.append('studentNum', item.studentNum);
+            await deleteTime(data)
+                .then((res) => {
+                    if (res.code == 0) {
+                        this.$notify({
+                            title: '删除成功',
+                            message: res.msg,
+                            type: 'success',
+                        });
+                        this.getTimetableInfo();
+                    } else {
+                        this.$notify.error({
+                            title: '删除失败',
+                            message: res.msg,
+                        });
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
+        //添加
+        async addTime() {
+            this.addVolunteerTime.volunteerCheckId = this.volunteerCheckId;
+            await addTime(this.addVolunteerTime).then((res) => {
+                if (res.code == 0) {
+                    this.$notify({
+                        title: '添加成功',
+                        message: res.msg,
+                        type: 'success',
+                    });
+                    this.getTimetableInfo();
+                } else {
+                    this.$notify.error({
+                        title: '添加失败',
+                        message: res.msg,
+                    });
+                }
             });
-            this.getTimetableInfo();
-          } else {
-            this.$notify.error({
-              title: "删除失败",
-              message: res.msg,
+        },
+        //修改
+        showEdit(item) {
+            this.editVolunteerTime.volunteerCheckId = item.volunteerCheckId;
+            this.editVolunteerTime.studentNum = item.studentNum;
+            this.showEditDialog = true;
+        },
+        //修改
+        async editTime() {
+            await editTime(this.editVolunteerTime).then((res) => {
+                if (res.code == 0) {
+                    this.$notify({
+                        title: '修改成功',
+                        message: res.msg,
+                        type: 'success',
+                    });
+                    this.getTimetableInfo();
+                } else {
+                    this.$notify.error({
+                        title: '修改失败',
+                        message: res.msg,
+                    });
+                }
             });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    //添加
-    async addTime() {
-      this.addVolunteerTime.volunteerCheckId = this.volunteerCheckId;
-      await addTime(this.addVolunteerTime).then((res) => {
-        if (res.code == 0) {
-          this.$notify({
-            title: "添加成功",
-            message: res.msg,
-            type: "success",
-          });
-          this.getTimetableInfo();
-        } else {
-          this.$notify.error({
-            title: "添加失败",
-            message: res.msg,
-          });
-        }
-      });
-    },
-    //修改
-    showEdit(item) {
-      this.editVolunteerTime.volunteerCheckId = item.volunteerCheckId;
-      this.editVolunteerTime.studentNum = item.studentNum;
-      this.showEditDialog = true;
-    },
-    //修改
-    async editTime() {
-      await editTime(this.editVolunteerTime).then((res) => {
-        if (res.code == 0) {
-          this.$notify({
-            title: "修改成功",
-            message: res.msg,
-            type: "success",
-          });
-          this.getTimetableInfo();
-        } else {
-          this.$notify.error({
-            title: "修改失败",
-            message: res.msg,
-          });
-        }
-      });
-    },
-    // 导出工时表
-    async exportD() {
-      var map = {
-        boss: this.exportname,
-        volunteerCheckId: this.volunteerCheckId,
-      };
-      await exportDialog(map).then((res) => {
-        if (res.code == 0) {
-          this.$notify.success({
-            title: "生成成功",
-            message: res.msg,
-          });
-          this.volunteerUrl = res.data;
-        } else {
-          this.$notify.error({
-            title: "生成失败",
-            message: err,
-          });
-        }
-      });
-      this.exportDia = false;
-      this.exportname = "";
-    },
-    //预览工时表
-    watchPlanning() {
-      window.open(
-        "https://view.officeapps.live.com/op/view.aspx?src=" +
+        },
+        // 导出工时表
+        async exportD() {
+            var map = {
+                boss: this.exportname,
+                volunteerCheckId: this.volunteerCheckId,
+            };
+            await exportDialog(map).then((res) => {
+                if (res.code == 0) {
+                    this.$notify.success({
+                        title: '生成成功',
+                        message: res.msg,
+                    });
+                    this.volunteerUrl = res.data;
+                } else {
+                    this.$notify.error({
+                        title: '生成失败',
+                        message: res.msg,
+                        //更改前是err
+                    });
+                    
+                }
+            });
+            this.exportDia = false;
+            this.exportname = '';
+        },
+        //预览工时表
+        watchPlanning() {
+            window.open(
+                'https://view.officeapps.live.com/op/view.aspx?src=' +
           this.volunteerUrl,
-        "_blank"
-      );
+                '_blank'
+            );
+        },
+        //下载工时表
+        downloadPlanning() {
+            window.open(this.volunteerUrl, '_blank');
+        },
     },
-    //下载工时表
-    downloadPlanning() {
-      window.open(this.volunteerUrl, "_blank");
-    },
-  },
 };
 </script>
 

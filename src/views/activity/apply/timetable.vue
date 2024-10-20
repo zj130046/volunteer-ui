@@ -404,7 +404,8 @@ export default {
                 .catch((err) => {
                     this.$notify.error({
                         title: '网络错误！',
-                        message: res.msg
+                        message: err
+                        //更改前是res
                     });
                 });
         },

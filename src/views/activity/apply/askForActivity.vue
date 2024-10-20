@@ -135,172 +135,172 @@
   </div>
 </template>
 <script>
-import { pushActivityPlanning } from '../../../api/allVolunteer/public'
+import { pushActivityPlanning } from '../../../api/allVolunteer/public';
 import {
-  getActivityCategoryList,
-  getAllLevel,
-  getClassList,
-  getAllCollege,
-} from '../../../api/common'
-import { getRandomString } from '../../../api/allVolunteer/leader'
-import { dateFormat } from '../../../utils/date'
+    getActivityCategoryList,
+    getAllLevel,
+    getClassList,
+    getAllCollege,
+} from '../../../api/common';
+import { getRandomString } from '../../../api/allVolunteer/leader';
+import { dateFormat } from '../../../utils/date';
 export default {
-  data() {
-    return {
-      activityPlanning: {
-        organizationId: '',
-        level: '',
-        activityCategoryId: '',
-        classOrCollegeId: '',
-        activityInPlanningForm: {},
-        collegeId: '',
-      },
-      activityInPlanningForm: {
-        activityName: '',
-        activityPurpose: '',
-        activityBackground: '',
-        activitySignificance: '',
-        sponsor: '',
-        contractor: '',
-        activityStartTime: '',
-        activityEndTime: '',
-        activityAddress: '',
-        activityDuration: '',
-        activityObject: '',
-        activityParticipants: '',
-        activityParticipantsNumber: '',
-        activityContent: '',
-        activityResource: '',
-        activityResourceNeed: '',
-        activityProcess: '',
-        activityProcessHolding: '',
-        activityLaterPhases: '',
-        activityFunds: '',
-        activitySafe: '',
-      },
-      activityCategoryList: [],
-      collegeList: [],
-      classList: [],
-      levelList: [],
-      length1: [{}],
-      length2: [{}],
-    }
-  },
-  created() {
-    this.activityPlanning.organizationId = this.$store.getters.originzationid
-    this.getActivityCategoryList()
-    this.getAllLevel()
-    this.getAllCollege()
-    this.getAllLevel()
-  },
-  mounted() {
+    data() {
+        return {
+            activityPlanning: {
+                organizationId: '',
+                level: '',
+                activityCategoryId: '',
+                classOrCollegeId: '',
+                activityInPlanningForm: {},
+                collegeId: '',
+            },
+            activityInPlanningForm: {
+                activityName: '',
+                activityPurpose: '',
+                activityBackground: '',
+                activitySignificance: '',
+                sponsor: '',
+                contractor: '',
+                activityStartTime: '',
+                activityEndTime: '',
+                activityAddress: '',
+                activityDuration: '',
+                activityObject: '',
+                activityParticipants: '',
+                activityParticipantsNumber: '',
+                activityContent: '',
+                activityResource: '',
+                activityResourceNeed: '',
+                activityProcess: '',
+                activityProcessHolding: '',
+                activityLaterPhases: '',
+                activityFunds: '',
+                activitySafe: '',
+            },
+            activityCategoryList: [],
+            collegeList: [],
+            classList: [],
+            levelList: [],
+            length1: [{}],
+            length2: [{}],
+        };
+    },
+    created() {
+        this.activityPlanning.organizationId = this.$store.getters.originzationid;
+        this.getActivityCategoryList();
+        this.getAllLevel();
+        this.getAllCollege();
+        this.getAllLevel();
+    },
+    mounted() {
     //禁用tab键
-    document.onkeydown = function () {
-      let key = window.event.keyCode
-      if (key == 9) {
-        window.event.preventDefault()
-      }
-    }
-  },
-  methods: {
+        document.onkeydown = function () {
+            let key = window.event.keyCode;
+            if (key == 9) {
+                window.event.preventDefault();
+            }
+        };
+    },
+    methods: {
     // 处理activityResource
     // 动态添加
-    change1(a) {
-      if (a == '+') {
-        this.length1.push({})
-      } else {
-        this.length1.pop()
-      }
-    },
-    change2(a) {
-      if (a == '+') {
-        this.length2.push({})
-      } else {
-        this.length2.pop()
-      }
-    },
-    // 活动类别表
-    async getActivityCategoryList() {
-      await getActivityCategoryList().then((res) => {
-        this.activityCategoryList = res.data
-      })
-    },
-    // 班级列表
-    async getClassList() {
-      await getClassList({
-        collegeId: this.activityPlanning.collegeId,
-        level: this.activityPlanning.level,
-      }).then((res) => {
-        this.classList = res.data.list
-      })
-    },
-    // 学院列表
-    async getAllCollege() {
-      await getAllCollege().then((res) => {
-        this.collegeList = res.data
-      })
-    },
-    async getAllLevel() {
-      await getAllLevel().then((res) => {
-        this.levelList = res.data
-      })
-    },
-    // 提交申请
-    async addActivity() {
-      //院级活动
-      if (this.activityPlanning.classOrCollegeId == '') {
-        this.activityPlanning.classOrCollegeId = this.activityPlanning.collegeId
-      }
+        change1(a) {
+            if (a == '+') {
+                this.length1.push({});
+            } else {
+                this.length1.pop();
+            }
+        },
+        change2(a) {
+            if (a == '+') {
+                this.length2.push({});
+            } else {
+                this.length2.pop();
+            }
+        },
+        // 活动类别表
+        async getActivityCategoryList() {
+            await getActivityCategoryList().then((res) => {
+                this.activityCategoryList = res.data;
+            });
+        },
+        // 班级列表
+        async getClassList() {
+            await getClassList({
+                collegeId: this.activityPlanning.collegeId,
+                level: this.activityPlanning.level,
+            }).then((res) => {
+                this.classList = res.data.list;
+            });
+        },
+        // 学院列表
+        async getAllCollege() {
+            await getAllCollege().then((res) => {
+                this.collegeList = res.data;
+            });
+        },
+        async getAllLevel() {
+            await getAllLevel().then((res) => {
+                this.levelList = res.data;
+            });
+        },
+        // 提交申请
+        async addActivity() {
+            //院级活动
+            if (this.activityPlanning.classOrCollegeId == '') {
+                this.activityPlanning.classOrCollegeId = this.activityPlanning.collegeId;
+            }
 
-      //map对象赋值
-      // let mmp1 = new Map();
-      // this.length1.forEach((item) => {
-      //   let key = item.name;
-      //   mmp1.set(key, item.num);
-      // });
-      // let mmp2 = new Map();
-      // this.length2.forEach((item) => {
-      //   let key = item.name;
-      //   mmp2.set(key, item.num);
-      // });
-      this.activityInPlanningForm.activityResource = this.length1
-      this.activityInPlanningForm.activityResourceNeed = this.length2
+            //map对象赋值
+            // let mmp1 = new Map();
+            // this.length1.forEach((item) => {
+            //   let key = item.name;
+            //   mmp1.set(key, item.num);
+            // });
+            // let mmp2 = new Map();
+            // this.length2.forEach((item) => {
+            //   let key = item.name;
+            //   mmp2.set(key, item.num);
+            // });
+            this.activityInPlanningForm.activityResource = this.length1;
+            this.activityInPlanningForm.activityResourceNeed = this.length2;
 
-      //转换时间格式
-      this.activityInPlanningForm.activityStartTime = dateFormat(
-        'YYYY-mm-dd',
-        this.activityInPlanningForm.activityStartTime
-      )
-      this.activityInPlanningForm.activityEndTime = dateFormat(
-        'YYYY-mm-dd',
-        this.activityInPlanningForm.activityEndTime
-      )
+            //转换时间格式
+            this.activityInPlanningForm.activityStartTime = dateFormat(
+                'YYYY-mm-dd',
+                this.activityInPlanningForm.activityStartTime
+            );
+            this.activityInPlanningForm.activityEndTime = dateFormat(
+                'YYYY-mm-dd',
+                this.activityInPlanningForm.activityEndTime
+            );
 
-      this.activityPlanning.activityInPlanningForm = this.activityInPlanningForm
-      console.log(this.activityPlanning)
-      await pushActivityPlanning(this.activityPlanning)
-        .then((res) => {
-          console.log(res.data)
-          if (res.code == 0) {
-            this.$notify.success({
-              title: '申请成功！',
-              message: '活动ID为' + res.data,
-            })
-            this.$router.push('/apply')
-          } else {
-            this.$notify.error({
-              title: '申请失败！',
-              message: res.msg,
-            })
-          }
-        })
-        .catch((err) => {
-          this.$notify.error({
-            title: '网络错误！',
-            message: res.msg,
-          })
-        })
+            this.activityPlanning.activityInPlanningForm = this.activityInPlanningForm;
+            console.log(this.activityPlanning);
+            await pushActivityPlanning(this.activityPlanning)
+                .then((res) => {
+                    console.log(res.data);
+                    if (res.code == 0) {
+                        this.$notify.success({
+                            title: '申请成功！',
+                            message: '活动ID为' + res.data,
+                        });
+                        this.$router.push('/apply');
+                    } else {
+                        this.$notify.error({
+                            title: '申请失败！',
+                            message: res.msg,
+                        });
+                    }
+                })
+                .catch((err) => {
+                    this.$notify.error({
+                        title: '网络错误！',
+                        message: err.msg,
+                    });
+                });
+        },
     },
-  },
-}
+};
 </script>
