@@ -74,8 +74,11 @@
                                                 item-text="rollName"
                                                 item-value="rollId"
                                                 @change="getAllOrganization"
-                                                dense
+                                               @blur="c(editedItem.rollId)"
+                                                
                                             ></v-select>
+                                        </v-col>
+                                        <v-col class="d-flex" cols="12">
                                         </v-col>
                                         <v-col
                                             cols="12"
@@ -278,6 +281,7 @@ export default {
         desserts: [],
         editedIndex: -1,
         editedItem: {
+            rollName:'',
             studentNum: '',
             rollId: '',
             mangeRange: []
@@ -381,7 +385,7 @@ export default {
         // 添加页面中的查找
         queryAdmin() {
             searchmemberInfo({ studentNum: this.editedItem.studentNum }).then(
-                res => {
+                (res) => {
                     if (res.data.list[0]) {
                         this.searchAdminList = res.data.list[0];
                     } else {
@@ -404,7 +408,7 @@ export default {
         },
         // 获取权限列表
         getAllOrganization() {
-            getAllOrganization().then(res => {
+            getAllOrganization().then((res) => {
                 this.organization = [];
                 if (
                     this.editedItem.rollId == 2 ||
@@ -423,12 +427,13 @@ export default {
                 }
             });
         },
+        
         // 搜索
         search() {
             // this.desserts = []
             if (/^\d+$/.test(this.searchInput)) {
                 searchAdminNum({ studentNum: this.searchInput })
-                    .then(res => {
+                    .then((res) => {
                         if (res.data) {
                             this.desserts = [];
                             this.desserts[0] = res.data;
@@ -438,14 +443,14 @@ export default {
                             });
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         this.$notify.error({
                             message: err.msg
                         });
                     });
             } else {
                 searchAdminName({ adminName: this.searchInput })
-                    .then(res => {
+                    .then((res) => {
                         if (res.data[0]) {
                             this.desserts = [];
                             this.desserts = res.data;
@@ -455,7 +460,7 @@ export default {
                             });
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         this.$notify.error({
                             message: err.msg
                         });
@@ -469,21 +474,28 @@ export default {
                 this.currPage = 1;
             }
             var test = { currPage: this.page };
-            searchAdminAll(test).then(res => {
+            searchAdminAll(test).then((res) => {
                 this.totalPage = res.data.totalPage;
                 this.desserts = res.data.list;
                 console.log(this.desserts);
             });
         },
+        c(id){
+            for(let i=0;i<=5;i+=1){
+                if(this.roleList[i].rollId == id){
+                    this.editedItem.rollName = this.roleList[i].rollName;
+                    break;
+                }
+            }
+        },
         //编辑管理员信息
         editItem(item) {
-            console.log(item);
             this.editedIndex = 0;
             this.editedItem = Object.assign({ mangeRange: [] }, item);
-            this.editedItem.roll = item.rollId;
+            this.editedItem.rollId = item.rollId;
             this.editedItem.adminId = item.adminId;
+            console.log(this.editedItem);
             this.getAllOrganization();
-            console.log('-------', this.editedItem);
             this.dialog = true;
         },
 
@@ -500,13 +512,13 @@ export default {
             };
             if (this.editedItem.rollId == 2 || this.editedItem.rollId == 3) {
                 deleteAdminInGeneral(map)
-                    .then(res => {
+                    .then((res) => {
                         this.$notify({
                             title: '已删除',
                             type: 'success'
                         });
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         this.$notify.error({
                             title: '删除失败',
                             message: err.msg
@@ -518,13 +530,13 @@ export default {
                 this.editedItem.rollId == 6
             ) {
                 deleteAdminInCollege(map)
-                    .then(res => {
+                    .then((res) => {
                         this.$notify({
                             message: '已删除',
                             type: 'success'
                         });
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         this.$notify.error({
                             title: '删除失败',
                             message: err.msg
@@ -535,13 +547,13 @@ export default {
                 this.editedItem.rollId == 8
             ) {
                 deleteAdminInOrganization(map)
-                    .then(res => {
+                    .then((res) => {
                         this.$notify({
                             message: '已删除',
                             type: 'success'
                         });
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         console.log(err);
                         this.$notify.error({
                             title: '删除失败',
@@ -579,7 +591,7 @@ export default {
             }
             if (this.editedItem.rollId == 2 || this.editedItem.rollId == 3) {
                 addAdminInGeneral(this.editedItem)
-                    .then(res => {
+                    .then((res) => {
                         this.desserts.push(this.editedItem);
                         this.$notify({
                             title: '已添加',
@@ -587,7 +599,7 @@ export default {
                             type: 'success'
                         });
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         this.$notify.error({
                             title: '添加失败',
                             message: err.msg
@@ -600,12 +612,13 @@ export default {
             ) {
                 var map = {
                     studentNum: this.editedItem.studentNum,
-                    rollId: this.editedItem.rollId
+                    rollId: this.editedItem.rollId,
+                    rollName: this.editedItem.rollName
                     // password: this.editedItem.password
                 };
                 console.log(map);
                 addAdminInCollege(map)
-                    .then(res => {
+                    .then((res) => {
                         this.desserts.push(this.editedItem);
                         this.$notify({
                             title: '已添加',
@@ -613,7 +626,7 @@ export default {
                             type: 'success'
                         });
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         this.$notify.error({
                             title: '添加失败',
                             message: err
@@ -624,7 +637,7 @@ export default {
                 this.editedItem.rollId == 8
             ) {
                 addAdminInOrganization(this.editedItem)
-                    .then(res => {
+                    .then((res) => {
                         this.desserts.push(this.editedItem);
                         this.$notify({
                             title: '已添加',
@@ -632,7 +645,7 @@ export default {
                             type: 'success'
                         });
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         this.$notify.error({
                             title: '添加失败',
                             message: err.msg
@@ -646,13 +659,13 @@ export default {
         },
         edit() {
             let mangeRangeString = '';
-
-            this.editedItem.mangeRange.forEach(item => {
+            this.editedItem.mangeRange=Object.entries(this.editedItem.mangeRange);
+            this.editedItem.mangeRange.forEach((item) => {
                 mangeRangeString += '-' + item;
             });
             this.editedItem.mangeRange = mangeRangeString;
-            console.log('=-=-=-=-=-', this.editedItem.mangeRange);
-            editAdminInfo(this.editedItem).then(res => {
+            console.log('=-=-=-=-=-11111', this.editedItem);
+            editAdminInfo(this.editedItem).then((res) => {
                 console.log(res.data);
                 this.$notify.info({
                     title: '修改成功'
